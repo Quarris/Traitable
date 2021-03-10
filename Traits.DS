@@ -1,0 +1,19 @@
+TraitHolder {
+   Map<ResourceLocation, Trait> Traits
+
+}
+
+Trait<T : Entity> {
+    T holder
+}
+
+TraitType {
+    ResourceLocation name;
+    TraitSupplier<T> supplier;
+}
+
+TraitSupplier {
+
+    Trait<T> create(ResourceLocation name, T entity)
+
+}
