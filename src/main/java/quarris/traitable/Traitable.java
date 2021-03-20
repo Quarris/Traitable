@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import quarris.traitable.api.TraitableAPI;
 import quarris.traitable.api.traits.TraitType;
+import quarris.traitable.traits.impl.TestTrait;
 
 @Mod(Traitable.ID)
 public class Traitable {
@@ -42,7 +43,7 @@ public class Traitable {
 
         @SubscribeEvent
         public static void registerTraits(RegistryEvent.Register<TraitType> event) {
-            event.getRegistry().register(new TraitType.Builder().create().setRegistryName(ModUtil.createRes("stuffings")));
+            event.getRegistry().register(new TraitType.Builder().create(TestTrait::new).setRegistryName(ModUtil.createRes("test")));
         }
     }
 }

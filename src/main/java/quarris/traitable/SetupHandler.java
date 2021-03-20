@@ -10,7 +10,6 @@ public class SetupHandler {
     @SubscribeEvent
     public void commonSetup(FMLCommonSetupEvent event) {
         ModUtil.registerCapability(ITraitHolder.class);
-        System.out.println(TraitRegistry.TRAIT_TYPES.getKeys());
     }
 
     @SubscribeEvent
