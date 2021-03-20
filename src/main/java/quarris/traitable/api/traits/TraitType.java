@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import quarris.traitable.api.utils.IAttachPredicate;
 
-public class TraitType<T extends Entity> extends ForgeRegistryEntry<TraitType<T>> {
+public class TraitType<T extends Entity> extends ForgeRegistryEntry<TraitType<?>> {
 
     private final IAttachPredicate attachPredicate;
     private final ITraitSupplier<T> traitSupplier;

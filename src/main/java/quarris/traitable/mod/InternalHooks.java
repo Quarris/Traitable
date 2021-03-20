@@ -1,4 +1,4 @@
-package quarris.traitable;
+package quarris.traitable.mod;
 
 import quarris.traitable.api.IInternalHooks;
 

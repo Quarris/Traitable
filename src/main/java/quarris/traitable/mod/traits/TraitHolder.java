@@ -1,4 +1,4 @@
-package quarris.traitable.traits;
+package quarris.traitable.mod.traits;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;

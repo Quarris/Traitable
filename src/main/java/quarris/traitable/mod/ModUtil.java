@@ -1,4 +1,4 @@
-package quarris.traitable;
+package quarris.traitable.mod;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.INBT;
@@ -6,9 +6,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import quarris.traitable.traits.EmptyTraitHolder;
-import quarris.traitable.traits.ITraitHolder;
-import quarris.traitable.traits.TraitHolder;
+import quarris.traitable.mod.traits.EmptyTraitHolder;
+import quarris.traitable.mod.traits.ITraitHolder;
+import quarris.traitable.mod.traits.TraitHolder;
 
 public class ModUtil {
 

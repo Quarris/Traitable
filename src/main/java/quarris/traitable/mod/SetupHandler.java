@@ -1,9 +1,9 @@
-package quarris.traitable;
+package quarris.traitable.mod;
 
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import quarris.traitable.traits.ITraitHolder;
+import quarris.traitable.mod.traits.ITraitHolder;
 
 public class SetupHandler {
 

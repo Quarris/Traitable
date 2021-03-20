@@ -1,10 +1,10 @@
-package quarris.traitable;
+package quarris.traitable.mod;
 
 import net.minecraft.entity.Entity;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import quarris.traitable.traits.TraitHolder;
+import quarris.traitable.mod.traits.TraitHolder;
 
 
 @Mod.EventBusSubscriber(modid = Traitable.ID)
