@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import quarris.traitable.api.TraitableAPI;
 import quarris.traitable.api.traits.TraitType;
+import quarris.traitable.mod.setup.SetupHandler;
 import quarris.traitable.mod.traits.impl.TestTrait;
 
 @Mod(Traitable.ID)

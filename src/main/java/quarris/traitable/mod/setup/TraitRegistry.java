@@ -1,4 +1,4 @@
-package quarris.traitable.mod;
+package quarris.traitable.mod.setup;
 
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryManager;
