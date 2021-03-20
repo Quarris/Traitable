@@ -2,8 +2,8 @@ package quarris.traitable.api.traits;
 
 import net.minecraft.entity.Entity;
 
-public interface ITraitSupplier<T extends Entity> {
+public interface ITraitSupplier {
 
-    ITrait<T> create(T entity);
+    ITrait create(Entity entity);
 
 }

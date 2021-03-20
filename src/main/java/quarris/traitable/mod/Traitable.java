@@ -20,7 +20,7 @@ public class Traitable {
     public static final String ID = "traitable";
     public static final String NAME = "Traitable";
 
-    public static final RegistryKey<Registry<TraitType<?>>> TRAIT_TYPE_REGISTRY_KEY = RegistryKey.getOrCreateRootKey(ModUtil.createRes("trait_type"));
+    public static final RegistryKey<Registry<TraitType>> TRAIT_TYPE_REGISTRY_KEY = RegistryKey.getOrCreateRootKey(ModUtil.createRes("trait_type"));
 
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
@@ -36,14 +36,14 @@ public class Traitable {
 
         @SubscribeEvent
         public static void createRegistries(RegistryEvent.NewRegistry event) {
-            new RegistryBuilder<TraitType<?>>()
+            new RegistryBuilder<TraitType>()
                     .setName(TRAIT_TYPE_REGISTRY_KEY.getLocation())
                     .setType(cast(TraitType.class))
                     .setMaxID(Integer.MAX_VALUE - 1).create();
         }
 
         @SubscribeEvent
-        public static void registerTraits(RegistryEvent.Register<TraitType<?>> event) {
+        public static void registerTraits(RegistryEvent.Register<TraitType> event) {
             event.getRegistry().register(new TraitType.Builder().create(TestTrait::new).setRegistryName(ModUtil.createRes("test")));
         }
 

@@ -2,16 +2,16 @@ package quarris.traitable.api.traits;
 
 import net.minecraft.entity.Entity;
 
-public class Trait<T extends Entity> implements ITrait<T> {
+public class Trait implements ITrait {
 
-    protected final T entity;
+    protected final Entity entity;
 
-    public Trait(T entity) {
+    public Trait(Entity entity) {
         this.entity = entity;
     }
 
     @Override
-    public T getEntity() {
+    public Entity getEntity() {
         return this.entity;
     }
 }
