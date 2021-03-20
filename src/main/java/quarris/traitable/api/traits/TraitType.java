@@ -1,18 +1,21 @@
 package quarris.traitable.api.traits;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class TraitType {
+public class TraitType extends ForgeRegistryEntry<TraitType> {
 
-    public final ResourceLocation name;
     //public final ITraitSupplier supplier;
 
-    private TraitType(ResourceLocation name) {
-        this.name = name;
+    private TraitType() {
     }
 
     public static class Builder {
 
+
+        public TraitType create() {
+            return new TraitType();
+        }
     }
 
 }

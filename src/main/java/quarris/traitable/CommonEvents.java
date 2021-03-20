@@ -11,7 +11,7 @@ import quarris.traitable.traits.TraitHolder;
 public class CommonEvents {
 
     @SubscribeEvent
-    public static <T extends Entity> void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+    public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         event.addCapability(ModUtil.createRes("trait_holder"), new TraitHolder.Provider(new TraitHolder(event.getObject())));
     }
 
