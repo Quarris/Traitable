@@ -17,7 +17,9 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        event.addCapability(ModUtil.createRes("trait_holder"), new TraitHolder.Provider(new TraitHolder(event.getObject())));
+        if (Traitable.SETTINGS.hasAttachableTraits(event.getObject())) {
+            event.addCapability(ModUtil.createRes("trait_holder"), new TraitHolder.Provider(new TraitHolder(event.getObject())));
+        }
     }
 
     @SubscribeEvent
@@ -25,7 +27,7 @@ public class CommonEvents {
         event.getDispatcher().register(Commands.literal("traitable")
                 .executes(source -> {
                     source.getSource().sendFeedback(new StringTextComponent("Opening Traitable Gui!"), false);
-                    PacketHandler.sendTo(new COpenConfigPacket(), source.getSource().asPlayer());
+                    PacketHandler.sendTo(source.getSource().asPlayer(), new COpenConfigPacket());
                     return 1;
                 })
         );

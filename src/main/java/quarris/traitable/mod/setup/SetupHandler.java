@@ -5,6 +5,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import quarris.traitable.mod.ModUtil;
+import quarris.traitable.mod.Traitable;
 import quarris.traitable.mod.network.PacketHandler;
 import quarris.traitable.mod.traits.ITraitHolder;
 

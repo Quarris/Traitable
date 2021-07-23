@@ -2,40 +2,55 @@ package quarris.traitable.mod.traits;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import quarris.traitable.api.traits.ITrait;
 import quarris.traitable.api.traits.TraitType;
+import quarris.traitable.mod.Traitable;
+import quarris.traitable.mod.setup.TraitRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TraitHolder implements ITraitHolder {
 
     @CapabilityInject(ITraitHolder.class)
     public static Capability<ITraitHolder> CAPABILITY;
 
-    private Set<ResourceLocation> availableTraits;
-    private Set<ITrait> activeTraits;
+    private final Map<ResourceLocation, ITrait> activeTraits;
 
     private final Entity holder;
 
     public TraitHolder(Entity holder) {
         this.holder = holder;
-        this.availableTraits = new HashSet<>();
-        this.activeTraits = new HashSet<>();
+        this.activeTraits = new HashMap<>();
     }
 
     public boolean activate(TraitType type) {
-        if (this.availableTraits.contains(type.getRegistryName())) {
+        if (Traitable.SETTINGS.canAttachTraitTo(this.holder, type.getRegistryName())) {
             ITrait trait = type.create(this.holder);
-            this.activeTraits.add(trait);
+            trait.onActivated(false);
+            this.activeTraits.put(type.getRegistryName(), trait);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean deactivate(TraitType type) {
+        if (this.activeTraits.containsKey(type.getRegistryName())) {
+            ITrait removed = this.activeTraits.remove(type.getRegistryName());
+            removed.onDeactivated();
             return true;
         }
 
@@ -44,12 +59,42 @@ public class TraitHolder implements ITraitHolder {
 
     @Override
     public CompoundNBT serializeNBT() {
-        return new CompoundNBT();
+        CompoundNBT nbt = new CompoundNBT();
+
+        ListNBT traitsNBT = new ListNBT();
+        for (ITrait trait : this.activeTraits.values()) {
+            CompoundNBT traitData = new CompoundNBT();
+            traitData.putString("Type", trait.getType().getRegistryName().toString());
+            if (trait instanceof INBTSerializable) {
+                traitData.put("Data", ((INBTSerializable<?>) trait).serializeNBT());
+            }
+            traitsNBT.add(traitData);
+        }
+        nbt.put("Traits", traitsNBT);
+
+        return nbt;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-
+        this.activeTraits.clear();
+        ListNBT traitsNBT = nbt.getList("Traits", Constants.NBT.TAG_COMPOUND);
+        for (INBT rawTraitData : traitsNBT) {
+            CompoundNBT traitData = (CompoundNBT) rawTraitData;
+            ResourceLocation typeName = new ResourceLocation(traitData.getString("Type"));
+            TraitType type = TraitRegistry.TRAIT_TYPES.getValue(typeName);
+            if (type == null) {
+                Traitable.LOGGER.warn("Couldn't load trait '{}' for entity '{}' because it is not registered.", typeName, this.holder.getDisplayName().getString());
+                continue;
+            }
+            ITrait trait = type.create(this.holder);
+            if (trait instanceof INBTSerializable && traitData.contains("Data")) {
+                ((INBTSerializable) trait).deserializeNBT(traitData.get("Data"));
+            }
+            trait.onActivated(true);
+            this.activeTraits.put(typeName, trait);
+        }
     }
 
     public static class Provider implements ICapabilitySerializable<CompoundNBT> {

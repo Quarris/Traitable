@@ -22,7 +22,7 @@ public class PacketHandler {
         channel.registerMessage(0, COpenConfigPacket.class, COpenConfigPacket::encode, COpenConfigPacket::decode, COpenConfigPacket::handle);
     }
 
-    public static <Packet> void sendTo(Packet packet, ServerPlayerEntity player) {
+    public static <Packet> void sendTo(ServerPlayerEntity player, Packet packet) {
         channel.sendTo(packet, player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
     }
 }
