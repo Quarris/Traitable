@@ -1,33 +1,32 @@
 package quarris.traitable.mod.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import quarris.traitable.mod.ModUtil;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class TraitableConfigScreen extends Screen {
 
     private final ConfirmPopupWidget.IConfirmation confirmation = (result) -> {
         if (result == ConfirmPopupWidget.IConfirmation.ConfirmType.YES) {
             this.save();
-            this.closeScreen();
+            this.onClose();
         } else if (result == ConfirmPopupWidget.IConfirmation.ConfirmType.NO) {
             this.discard = true;
-            this.closeScreen();
+            this.onClose();
         } else if (result == ConfirmPopupWidget.IConfirmation.ConfirmType.CANCEL) {
             this.confirmPopup = null;
         }
     };
 
-    private static final ITextComponent CONFIRMATION_TITLE = new TranslationTextComponent("traitable.screen.config.confirm_save");
+    private static final Component CONFIRMATION_TITLE = new TranslatableComponent("traitable.screen.config.confirm_save");
 
     private boolean modified;
     private boolean discard;
     private ConfirmPopupWidget confirmPopup = null;
 
     public TraitableConfigScreen() {
-        super(new TranslationTextComponent("traitable.screen.config.title"));
+        super(new TranslatableComponent("traitable.screen.config.title"));
     }
 
     @Override
@@ -38,7 +37,7 @@ public class TraitableConfigScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         if (this.confirmPopup != null) {
@@ -47,14 +46,14 @@ public class TraitableConfigScreen extends Screen {
     }
 
     @Override
-    public void closeScreen() {
+    public void onClose() {
         if (this.confirmPopup != null) {
             this.confirmPopup = null;
         }
         if (this.modified && !this.discard) {
             this.popup(CONFIRMATION_TITLE, this.confirmation);
         } else {
-            super.closeScreen();
+            super.onClose();
         }
     }
 
@@ -77,7 +76,7 @@ public class TraitableConfigScreen extends Screen {
         this.modified = false;
     }
 
-    public void popup(ITextComponent title, ConfirmPopupWidget.IConfirmation result) {
+    public void popup(Component title, ConfirmPopupWidget.IConfirmation result) {
         this.confirmPopup = new ConfirmPopupWidget((this.width - 170) / 2, (this.height - 120) / 2, 200, 100, title, result);
     }
 }

@@ -2,9 +2,9 @@ package quarris.traitable.mod;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.resources.ResourceLocation;
 import quarris.traitable.api.traits.TraitType;
 import quarris.traitable.mod.setup.TraitRegistry;
 

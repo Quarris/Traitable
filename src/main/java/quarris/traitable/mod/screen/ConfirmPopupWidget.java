@@ -1,35 +1,36 @@
 package quarris.traitable.mod.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
-public class ConfirmPopupWidget extends Widget {
+public class ConfirmPopupWidget extends AbstractWidget {
 
     private final Button yesButton;
     private final Button noButton;
     private final Button cancelButton;
 
-    public ConfirmPopupWidget(int x, int y, int width, int height, ITextComponent title, IConfirmation confirm) {
+    public ConfirmPopupWidget(int x, int y, int width, int height, Component title, IConfirmation confirm) {
         super(x, y, width, height, title);
 
         this.setMessage(title);
 
-        this.yesButton = new Button(x + 20, y + height - 40, 40, 20, new TranslationTextComponent("traitable.screen.confirm_popup.yes"),
+        this.yesButton = new Button(x + 20, y + height - 40, 40, 20, new TranslatableComponent("traitable.screen.confirm_popup.yes"),
                 button -> confirm.onConfirm(IConfirmation.ConfirmType.YES));
-        this.noButton = new Button(x + 80, y + height - 40, 40, 20, new TranslationTextComponent("traitable.screen.confirm_popup.no"),
+        this.noButton = new Button(x + 80, y + height - 40, 40, 20, new TranslatableComponent("traitable.screen.confirm_popup.no"),
                 button -> confirm.onConfirm(IConfirmation.ConfirmType.NO));
-        this.cancelButton = new Button(x + 140, y + height - 40, 40, 20, new TranslationTextComponent("traitable.screen.confirm_popup.cancel"),
+        this.cancelButton = new Button(x + 140, y + height - 40, 40, 20, new TranslatableComponent("traitable.screen.confirm_popup.cancel"),
                 button -> confirm.onConfirm(IConfirmation.ConfirmType.CANCEL));
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.yesButton.render(matrixStack, mouseX, mouseY, partialTicks);
         this.noButton.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -37,16 +38,16 @@ public class ConfirmPopupWidget extends Widget {
     }
 
     @Override
-    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
-        FontRenderer fontrenderer = minecraft.fontRenderer;
+        Font fontrenderer = minecraft.font;
         this.renderBg(matrixStack, minecraft, mouseX, mouseY);
         int j = getFGColor();
-        drawCenteredString(matrixStack, fontrenderer, this.getMessage(), this.x + this.width / 2, this.y + 20, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
+        drawCenteredString(matrixStack, fontrenderer, this.getMessage(), this.x + this.width / 2, this.y + 20, j | Mth.ceil(this.alpha * 255.0F) << 24);
     }
 
     @Override
-    protected void renderBg(MatrixStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
         this.fillGradient(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, 0xaa222222, 0xaa222222);
     }
 
@@ -59,6 +60,10 @@ public class ConfirmPopupWidget extends Widget {
         } else if (this.cancelButton.isMouseOver(mouseX, mouseY)) {
             this.cancelButton.onClick(mouseX, mouseY);
         }
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
     }
 
     public interface IConfirmation {

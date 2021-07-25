@@ -1,8 +1,8 @@
 package quarris.traitable.api.traits;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 
-public class Trait implements ITrait {
+public class Trait {
 
     private final TraitType type;
     protected final Entity entity;
@@ -12,12 +12,18 @@ public class Trait implements ITrait {
         this.entity = entity;
     }
 
-    @Override
+    public void onActivated(boolean forSync) {
+
+    }
+
+    public void onDeactivated() {
+
+    }
+
     public Entity getEntity() {
         return this.entity;
     }
 
-    @Override
     public TraitType getType() {
         return this.type;
     }

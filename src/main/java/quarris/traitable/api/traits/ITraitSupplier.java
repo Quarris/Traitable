@@ -1,9 +1,9 @@
 package quarris.traitable.api.traits;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 
 public interface ITraitSupplier {
 
-    ITrait create(Entity entity);
+    Trait create(Entity entity);
 
 }

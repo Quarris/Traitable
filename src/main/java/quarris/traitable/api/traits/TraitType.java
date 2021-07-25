@@ -1,6 +1,6 @@
 package quarris.traitable.api.traits;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import quarris.traitable.api.utils.IAttachPredicate;
@@ -19,7 +19,7 @@ public class TraitType extends ForgeRegistryEntry<TraitType> {
         this.effects = effects;
     }
 
-    public ITrait create(Entity entity) {
+    public Trait create(Entity entity) {
         return this.traitSupplier.create(entity);
     }
 
@@ -33,7 +33,7 @@ public class TraitType extends ForgeRegistryEntry<TraitType> {
             return this;
         }
 
-        public <T extends ITrait, E extends Event> Builder addEffect(Class<E> eventClass, ITraitEffect<T, E> effect, Function<E, Entity> entityGetter) {
+        public <T extends Trait, E extends Event> Builder addEffect(Class<E> eventClass, ITraitEffect<T, E> effect, Function<E, Entity> entityGetter) {
             this.effects.add(new TraitTypeEffect<>(eventClass, effect, entityGetter));
             return this;
         }
@@ -43,7 +43,7 @@ public class TraitType extends ForgeRegistryEntry<TraitType> {
         }
     }
 
-    public static class TraitTypeEffect<T extends ITrait, E extends Event> {
+    public static class TraitTypeEffect<T extends Trait, E extends Event> {
         public final Class<E> eventClass;
         public final ITraitEffect<T, E> effect;
         public final Function<E, Entity> entityGetter;

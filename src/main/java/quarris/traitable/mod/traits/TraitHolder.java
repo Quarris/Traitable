@@ -1,18 +1,18 @@
 package quarris.traitable.mod.traits;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import quarris.traitable.api.traits.ITrait;
+import quarris.traitable.api.traits.Trait;
 import quarris.traitable.api.traits.TraitType;
 import quarris.traitable.mod.Traitable;
 import quarris.traitable.mod.setup.TraitRegistry;
@@ -27,7 +27,7 @@ public class TraitHolder implements ITraitHolder {
     @CapabilityInject(ITraitHolder.class)
     public static Capability<ITraitHolder> CAPABILITY;
 
-    private final Map<ResourceLocation, ITrait> activeTraits;
+    private final Map<ResourceLocation, Trait> activeTraits;
 
     private final Entity holder;
 
@@ -38,7 +38,7 @@ public class TraitHolder implements ITraitHolder {
 
     public boolean activate(TraitType type) {
         if (Traitable.SETTINGS.canAttachTraitTo(this.holder, type.getRegistryName())) {
-            ITrait trait = type.create(this.holder);
+            Trait trait = type.create(this.holder);
             trait.onActivated(false);
             this.activeTraits.put(type.getRegistryName(), trait);
             return true;
@@ -49,7 +49,7 @@ public class TraitHolder implements ITraitHolder {
 
     public boolean deactivate(TraitType type) {
         if (this.activeTraits.containsKey(type.getRegistryName())) {
-            ITrait removed = this.activeTraits.remove(type.getRegistryName());
+            Trait removed = this.activeTraits.remove(type.getRegistryName());
             removed.onDeactivated();
             return true;
         }
@@ -58,12 +58,12 @@ public class TraitHolder implements ITraitHolder {
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
 
-        ListNBT traitsNBT = new ListNBT();
-        for (ITrait trait : this.activeTraits.values()) {
-            CompoundNBT traitData = new CompoundNBT();
+        ListTag traitsNBT = new ListTag();
+        for (Trait trait : this.activeTraits.values()) {
+            CompoundTag traitData = new CompoundTag();
             traitData.putString("Type", trait.getType().getRegistryName().toString());
             if (trait instanceof INBTSerializable) {
                 traitData.put("Data", ((INBTSerializable<?>) trait).serializeNBT());
@@ -77,18 +77,18 @@ public class TraitHolder implements ITraitHolder {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         this.activeTraits.clear();
-        ListNBT traitsNBT = nbt.getList("Traits", Constants.NBT.TAG_COMPOUND);
-        for (INBT rawTraitData : traitsNBT) {
-            CompoundNBT traitData = (CompoundNBT) rawTraitData;
+        ListTag traitsNBT = nbt.getList("Traits", Constants.NBT.TAG_COMPOUND);
+        for (Tag rawTraitData : traitsNBT) {
+            CompoundTag traitData = (CompoundTag) rawTraitData;
             ResourceLocation typeName = new ResourceLocation(traitData.getString("Type"));
             TraitType type = TraitRegistry.TRAIT_TYPES.getValue(typeName);
             if (type == null) {
                 Traitable.LOGGER.warn("Couldn't load trait '{}' for entity '{}' because it is not registered.", typeName, this.holder.getDisplayName().getString());
                 continue;
             }
-            ITrait trait = type.create(this.holder);
+            Trait trait = type.create(this.holder);
             if (trait instanceof INBTSerializable && traitData.contains("Data")) {
                 ((INBTSerializable) trait).deserializeNBT(traitData.get("Data"));
             }
@@ -97,7 +97,7 @@ public class TraitHolder implements ITraitHolder {
         }
     }
 
-    public static class Provider implements ICapabilitySerializable<CompoundNBT> {
+    public static class Provider implements ICapabilitySerializable<CompoundTag> {
 
         private LazyOptional<ITraitHolder> inst;
 
@@ -115,12 +115,12 @@ public class TraitHolder implements ITraitHolder {
         }
 
         @Override
-        public CompoundNBT serializeNBT() {
+        public CompoundTag serializeNBT() {
             return inst.orElse(EmptyTraitHolder.INST).serializeNBT();
         }
 
         @Override
-        public void deserializeNBT(CompoundNBT nbt) {
+        public void deserializeNBT(CompoundTag nbt) {
             inst.orElse(EmptyTraitHolder.INST).deserializeNBT(nbt);
         }
     }

@@ -1,6 +1,6 @@
 package quarris.traitable.mod.traits;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 public final class EmptyTraitHolder implements ITraitHolder {
 
@@ -9,7 +9,7 @@ public final class EmptyTraitHolder implements ITraitHolder {
     private EmptyTraitHolder() { }
 
     @Override
-    public CompoundNBT serializeNBT() { return new CompoundNBT(); }
+    public CompoundTag serializeNBT() { return new CompoundTag(); }
     @Override
-    public void deserializeNBT(CompoundNBT nbt) { }
+    public void deserializeNBT(CompoundTag nbt) { }
 }
