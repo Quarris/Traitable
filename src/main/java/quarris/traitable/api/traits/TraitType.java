@@ -23,10 +23,14 @@ public class TraitType extends ForgeRegistryEntry<TraitType> {
         return this.traitSupplier.create(entity);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
 
         private Set<TraitTypeEffect<?, ?>> effects = new HashSet<>();
-        private IAttachPredicate attachPredicate = e -> true;
+        private IAttachPredicate attachPredicate = IAttachPredicate.ALWAYS;
 
         public Builder setAttachPredicate(IAttachPredicate predicate) {
             this.attachPredicate = predicate;
@@ -43,16 +47,10 @@ public class TraitType extends ForgeRegistryEntry<TraitType> {
         }
     }
 
-    public static class TraitTypeEffect<T extends Trait, E extends Event> {
-        public final Class<E> eventClass;
-        public final ITraitEffect<T, E> effect;
-        public final Function<E, Entity> entityGetter;
-
-        public TraitTypeEffect(Class<E> eventClass, ITraitEffect<T, E> effect, Function<E, Entity> entityGetter) {
-            this.eventClass = eventClass;
-            this.effect = effect;
-            this.entityGetter = entityGetter;
-        }
+    public record TraitTypeEffect<T extends Trait, E extends Event>(
+        Class<E> eventClass,
+        ITraitEffect<T, E> effect,
+        Function<E, Entity> entityGetter) {
     }
 
 }

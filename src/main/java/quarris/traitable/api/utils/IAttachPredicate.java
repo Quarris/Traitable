@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 
 public interface IAttachPredicate extends Predicate<Entity> {
 
+    IAttachPredicate ALWAYS = entity -> true;
     IAttachPredicate IS_PLAYER = entity -> entity instanceof Player;
     IAttachPredicate IS_LIVING = entity -> entity instanceof LivingEntity;
 
