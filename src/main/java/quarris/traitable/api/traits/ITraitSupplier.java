@@ -1,9 +1,10 @@
 package quarris.traitable.api.traits;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.common.extensions.IForgeEntity;
 
-public interface ITraitSupplier {
+public interface ITraitSupplier<T extends IForgeEntity> {
 
-    Trait create(Entity entity);
+    Trait<T> create(T entity);
 
 }
