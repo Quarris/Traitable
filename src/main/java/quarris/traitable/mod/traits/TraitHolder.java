@@ -12,10 +12,11 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import quarris.traitable.api.TraitableAPI;
 import quarris.traitable.api.traits.Trait;
 import quarris.traitable.api.traits.TraitType;
+import quarris.traitable.mod.ModRef;
 import quarris.traitable.mod.Traitable;
-import quarris.traitable.mod.setup.TraitRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,7 +28,7 @@ public class TraitHolder implements ITraitHolder {
     @CapabilityInject(ITraitHolder.class)
     public static Capability<ITraitHolder> CAPABILITY;
 
-    private final Map<ResourceLocation, Trait> activeTraits;
+    private final Map<ResourceLocation, Trait<?>> activeTraits;
 
     private final Entity holder;
 
@@ -37,8 +38,8 @@ public class TraitHolder implements ITraitHolder {
     }
 
     public boolean activate(TraitType type) {
-        if (Traitable.SETTINGS.canAttachTraitTo(this.holder, type.getRegistryName())) {
-            Trait trait = type.create(this.holder);
+        if (TraitableAPI.canAttachTraitTo(this.holder, type)) {
+            Trait<?> trait = type.create(this.holder);
             trait.onActivated(false);
             this.activeTraits.put(type.getRegistryName(), trait);
             return true;
@@ -49,7 +50,7 @@ public class TraitHolder implements ITraitHolder {
 
     public boolean deactivate(TraitType type) {
         if (this.activeTraits.containsKey(type.getRegistryName())) {
-            Trait removed = this.activeTraits.remove(type.getRegistryName());
+            Trait<?> removed = this.activeTraits.remove(type.getRegistryName());
             removed.onDeactivated();
             return true;
         }
@@ -62,7 +63,7 @@ public class TraitHolder implements ITraitHolder {
         CompoundTag nbt = new CompoundTag();
 
         ListTag traitsNBT = new ListTag();
-        for (Trait trait : this.activeTraits.values()) {
+        for (Trait<?> trait : this.activeTraits.values()) {
             CompoundTag traitData = new CompoundTag();
             traitData.putString("Type", trait.getType().getRegistryName().toString());
             if (trait instanceof INBTSerializable) {
@@ -83,9 +84,9 @@ public class TraitHolder implements ITraitHolder {
         for (Tag rawTraitData : traitsNBT) {
             CompoundTag traitData = (CompoundTag) rawTraitData;
             ResourceLocation typeName = new ResourceLocation(traitData.getString("Type"));
-            TraitType type = TraitRegistry.TRAIT_TYPES.getValue(typeName);
+            TraitType type = TraitableAPI.TRAIT_REGISTRY.getValue(typeName);
             if (type == null) {
-                Traitable.LOGGER.warn("Couldn't load trait '{}' for entity '{}' because it is not registered.", typeName, this.holder.getDisplayName().getString());
+                ModRef.LOGGER.warn("Couldn't load trait '{}' for entity '{}' because it is not registered.", typeName, this.holder.getDisplayName().getString());
                 continue;
             }
             Trait trait = type.create(this.holder);

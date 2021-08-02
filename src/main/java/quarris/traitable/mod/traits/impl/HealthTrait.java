@@ -5,7 +5,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import quarris.traitable.api.traits.Trait;
-import quarris.traitable.api.traits.TraitType;
 import quarris.traitable.mod.traits.BuiltinTraits;
 
 import java.util.UUID;
@@ -17,7 +16,6 @@ public class HealthTrait extends Trait<LivingEntity> {
     public HealthTrait(LivingEntity entity) {
         super(BuiltinTraits.HEALTH_TRAIT.get(), entity);
     }
-
 
     @Override
     public void onActivated(boolean forSync) {

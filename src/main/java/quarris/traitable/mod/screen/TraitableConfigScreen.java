@@ -37,18 +37,29 @@ public class TraitableConfigScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        this.renderDirtBackground(0);
+        super.render(poseStack, mouseX, mouseY, partialTicks);
+        this.fillGradient(poseStack, this.width / 2 - 50, this.height / 2 - 40, this.width / 2 + 50, this.height / 2 + 40, 0xC0101010, 0xD0101010);
+        this.renderForeground(poseStack, mouseX, mouseY, partialTicks);
         if (this.confirmPopup != null) {
-            this.confirmPopup.render(matrixStack, mouseX, mouseY, partialTicks);
+            this.confirmPopup.render(poseStack, mouseX, mouseY, partialTicks);
         }
     }
+
+    public void renderForeground(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        String title = "Traits";
+        float width = this.minecraft.font.width(title);
+        this.minecraft.font.draw(poseStack, title, this.width / 2f - width / 2, 10, 0x404040);
+    }
+
+
 
     @Override
     public void onClose() {
         if (this.confirmPopup != null) {
             this.confirmPopup = null;
+            return;
         }
         if (this.modified && !this.discard) {
             this.popup(CONFIRMATION_TITLE, this.confirmation);

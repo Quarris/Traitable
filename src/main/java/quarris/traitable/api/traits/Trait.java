@@ -1,13 +1,15 @@
 package quarris.traitable.api.traits;
 
-import net.minecraftforge.common.extensions.IForgeEntity;
+import net.minecraft.world.entity.Entity;
+import quarris.traitable.api.TraitableAPI;
+import quarris.traitable.api.attributes.TraitAttributes;
 
-public class Trait<T extends IForgeEntity> {
+public class Trait<T extends Entity> {
 
-    private final TraitType type;
+    private final TraitType<?> type;
     protected final T entity;
 
-    public Trait(TraitType type, T entity) {
+    public Trait(TraitType<?> type, T entity) {
         this.type = type;
         this.entity = entity;
     }
@@ -24,7 +26,11 @@ public class Trait<T extends IForgeEntity> {
         return this.entity;
     }
 
-    public TraitType getType() {
+    public TraitType<?> getType() {
         return this.type;
+    }
+
+    protected TraitAttributes getAttributes() {
+        return TraitableAPI.getAttributesForEntity(this.getEntity());
     }
 }

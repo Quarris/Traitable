@@ -1,1 +1,0 @@
-Add attributes/configs to TraitType which are easily changed via TraitsSettings
